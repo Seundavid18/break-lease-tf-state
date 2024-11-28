@@ -1,0 +1,16 @@
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Check the lease status of the blob
+            leaseStatus=$(az storage blob show --blob-name terraform.tfstate --container-name test --account-name seunleasetest --query "properties.lease.status" -o tsv)
+            # Break the lease only if a lease exists
+            if [ "$leaseStatus" == "locked" ]; then
+              echo "Lease is present. Breaking the lease."
+              az storage blob lease break --blob-name terraform.tfstate --container-name test --account-name seunleasetest
+              echo "No lease present on the blob. Skipping lease break."
+            fi

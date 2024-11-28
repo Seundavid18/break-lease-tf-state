@@ -1,0 +1,9 @@
+trigger: none
+
+pr: none
+
+- template: ../template/break-lease.yml
+  parameters:
+      storage_account_name: 'tfcreatedeveus'
+      container_name: 'container-tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
